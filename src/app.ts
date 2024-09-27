@@ -1,5 +1,6 @@
 import express from 'express'
 import userRoutes from './routes/userRoutes'
+import { AppDataSource } from './data_source'
 
 const app = express()
 const port = 3000
@@ -12,6 +13,14 @@ app.get('/', (req, res) => {
   res.send('Hello, TypeScript API!')
 })
 
-app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`)
-})
+AppDataSource.initialize()
+  .then(() => {
+    console.log('Data Source has been initialized!')
+
+    app.listen(port, () => {
+      console.log(`Server running on http://localhost:${port}`)
+    })
+  })
+  .catch((error) => {
+    console.error('Error during Data Source initialization:', error)
+  })
